@@ -1,0 +1,22 @@
+services:
+  servidor:
+    build: ./servidor # Carpeta desde la que se construirá la imagen
+    container_name: servidor # Nombre del contenedor
+    ports:  # Puertos que serán mapeados
+      - "8000:8000" # En este caso, se mapeará el puerto 8000 del servidor al puerto 8000 del host (máquina virtual)
+    networks:
+      - red-python  # Red a la que se conectará
+
+  cliente:
+    build: ./cliente
+    container_name: cliente
+    depends_on:
+      - servidor  # Espera que el contenedor 'servidor' esté disponible antes de iniciar 'cliente'
+    stdin_open: true  # Mantiene abierta la entrada estándar (interactivo)
+    tty: true         # Proporciona un terminal interactivo
+    networks:
+      - red-python
+
+networks:
+  red-python: # Definimos la red para los contenedores
+    driver: bridge  # Definimos el driver 'bridge' para conectar los contenedores.
